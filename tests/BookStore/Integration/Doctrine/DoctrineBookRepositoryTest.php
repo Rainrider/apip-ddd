@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\BookStore\Integration\Doctrine;
 
+use App\BookStore\Domain\Model\Book;
 use App\BookStore\Domain\ValueObject\Author;
 use App\BookStore\Infrastructure\Doctrine\DoctrineBookRepository;
 use App\Shared\Infrastructure\Doctrine\DoctrinePaginator;
@@ -154,7 +155,7 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
 
         $i = 0;
         foreach ($repository as $book) {
-            static::assertSame($books[$i], $book);
+            static::assertEquals($books[$i]->id(), $book->id());
             ++$i;
         }
     }
@@ -170,6 +171,7 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
             DummyBookFactory::createBook(),
             DummyBookFactory::createBook(),
         ];
+        $bookIds = array_map(static fn (Book $b) => (string) $b->id(), $books);
 
         foreach ($books as $book) {
             $repository->add($book);
@@ -180,7 +182,7 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
 
         $i = 0;
         foreach ($repository as $book) {
-            static::assertContains($book, $books);
+            static::assertContains((string) $book->id(), $bookIds);
             ++$i;
         }
 
@@ -190,7 +192,7 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
 
         $i = 0;
         foreach ($repository as $book) {
-            static::assertContains($book, $books);
+            static::assertContains((string) $book->id(), $bookIds);
             ++$i;
         }
 

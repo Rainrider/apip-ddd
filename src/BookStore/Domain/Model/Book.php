@@ -11,31 +11,20 @@ use App\BookStore\Domain\ValueObject\BookId;
 use App\BookStore\Domain\ValueObject\BookName;
 use App\BookStore\Domain\ValueObject\Discount;
 use App\BookStore\Domain\ValueObject\Price;
-use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
 class Book
 {
-    #[ORM\Embedded(columnPrefix: false)]
-    private readonly BookId $id;
+    private BookId $id;
 
     public function __construct(
-        #[ORM\Embedded(columnPrefix: false)]
         private BookName $name,
-
-        #[ORM\Embedded(columnPrefix: false)]
         private BookDescription $description,
-
-        #[ORM\Embedded(columnPrefix: false)]
         private Author $author,
-
-        #[ORM\Embedded(columnPrefix: false)]
         private BookContent $content,
-
-        #[ORM\Embedded(columnPrefix: false)]
         private Price $price,
+        ?BookId $id = null,
     ) {
-        $this->id = new BookId();
+        $this->id = $id ?? new BookId();
     }
 
     public function update(
